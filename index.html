@@ -97,7 +97,6 @@
             max-width: 300px;
             min-width: 300px;
             aspect-ratio: 1 / 1;
-            margin: 0 auto;
         }
         .donut-chart-svg { width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
         .donut-chart-svg circle { transition: transform 0.3s ease; transform-origin: center; cursor: pointer; }
@@ -153,7 +152,10 @@
         
         footer { text-align: center; padding: 40px; color: #ccc; font-size: 0.9em; }
 
-        /* === MOBILE RESPONSIVE STYLES === */
+        @media (max-width: 992px) {
+            .channel-breakdown-table .hide-mobile { display: none; }
+        }
+
         @media (max-width: 768px) {
             .container { padding: 15px; }
             header { padding: 30px 0; }
@@ -172,16 +174,16 @@
             .legend-container { width: 100%; }
             
             /* Responsive Tables */
-            table { border-radius: 0; box-shadow: none; background-color: transparent; }
-            table thead { display: none; }
-            table tr { 
+            table.responsive-table { border-radius: 0; box-shadow: none; background-color: transparent; }
+            table.responsive-table thead { display: none; }
+            table.responsive-table tr { 
                 display: block; 
                 margin-bottom: 20px; 
                 background: var(--card-light); 
                 border-radius: 15px;
                 box-shadow: 0 10px 30px rgba(0,0,0,0.07);
             }
-            table td { 
+            table.responsive-table td { 
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
@@ -189,17 +191,15 @@
                 border-bottom: 1px solid var(--border-color);
                 text-align: right;
             }
-            table td:last-child { border-bottom: 0; }
-            table td::before {
+            table.responsive-table td:last-child { border-bottom: 0; }
+            table.responsive-table td::before {
                 content: attr(data-label);
                 font-weight: bold;
                 text-align: left;
                 margin-right: 20px;
                 color: var(--text-dark);
             }
-            .kpi-table .highlight {
-                 border: 2px solid var(--ddx-orange);
-            }
+            .kpi-table .highlight { border: 2px solid var(--ddx-orange); }
             
             .game-stats { flex-direction: column; gap: 15px; }
             #muscle { font-size: 100px; }
@@ -278,9 +278,100 @@
                 </div>
             </section>
 
+             <section class="section section-break">
+                <h2 class="section-title reveal">Детальный разбор <span>каналов</span></h2>
+                <p class="section-description reveal">Прогнозные KPI для каждого канала коммуникации. Все расчеты основаны на целевом (реалистичном) сценарии.</p>
+                <table class="responsive-table channel-breakdown-table reveal">
+                    <thead>
+                        <tr>
+                            <th>Канал</th>
+                            <th>Охват <div class="tooltip"><span class="tooltip-icon">i</span><span class="tooltip-text">Прогнозное кол-во показов (для digital) или контактов (для CRM).</span></div></th>
+                            <th class="hide-mobile">CTR <div class="tooltip"><span class="tooltip-icon">i</span><span class="tooltip-text">Click-Through Rate. Процент кликов от показов. Для CRM - Open Rate.</span></div></th>
+                            <th class="hide-mobile">CPC <div class="tooltip"><span class="tooltip-icon">i</span><span class="tooltip-text">Cost Per Click. Стоимость одного перехода на сайт.</span></div></th>
+                            <th>CR <div class="tooltip"><span class="tooltip-icon">i</span><span class="tooltip-text">Conversion Rate. Процент продаж от кликов (для digital) или от охвата (для CRM).</span></div></th>
+                            <th>Доход</th>
+                            <th class="hide-mobile">Прибыль</th>
+                            <th>ROI</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-label="Канал" style="font-weight: bold; color: var(--c1);">Performance</td>
+                            <td data-label="Охват">~8 млн</td>
+                            <td data-label="CTR" class="hide-mobile">3%</td>
+                            <td data-label="CPC" class="hide-mobile">~45 ₽</td>
+                            <td data-label="CR">2%</td>
+                            <td data-label="Доход">64,4М ₽</td>
+                            <td data-label="Прибыль" class="hide-mobile">54М ₽</td>
+                            <td data-label="ROI">519%</td>
+                        </tr>
+                        <tr>
+                            <td data-label="Канал" style="font-weight: bold; color: var(--c2);">Бонусы тренерам</td>
+                            <td data-label="Охват">~1 млн</td>
+                            <td data-label="CTR" class="hide-mobile">2.5%</td>
+                            <td data-label="CPC" class="hide-mobile">120 ₽</td>
+                            <td data-label="CR">2.4%</td>
+                            <td data-label="Доход">8,4М ₽</td>
+                            <td data-label="Прибыль" class="hide-mobile">5,4М ₽</td>
+                            <td data-label="ROI">180%</td>
+                        </tr>
+                        <tr>
+                            <td data-label="Канал" style="font-weight: bold; color: var(--c3);">Наружная реклама</td>
+                            <td data-label="Охват">5M+ OTS <div class="tooltip"><span class="tooltip-icon">i</span><span class="tooltip-text">Opportunity To See. Расчетная цифра контактов аудитории с 53 ситилайтами в течение месяца.</span></div></td>
+                            <td data-label="CTR" class="hide-mobile">N/A</td>
+                            <td data-label="CPC" class="hide-mobile">N/A</td>
+                            <td data-label="CR">~0.002%</td>
+                            <td data-label="Доход">1,4М ₽</td>
+                            <td data-label="Прибыль" class="hide-mobile">-1М ₽</td>
+                            <td data-label="ROI" style="color: #f00;">-42% <div class="tooltip"><span class="tooltip-icon">i</span><span class="tooltip-text">Отрицательный ROI закономерен. Роль наружки - повышать эффективность других каналов, а не продавать напрямую.</span></div></td>
+                        </tr>
+                        <tr>
+                            <td data-label="Канал" style="font-weight: bold; color: var(--c4);">SMM</td>
+                            <td data-label="Охват">~2 млн</td>
+                            <td data-label="CTR" class="hide-mobile">1.5%</td>
+                            <td data-label="CPC" class="hide-mobile">50 ₽</td>
+                            <td data-label="CR">0.6%</td>
+                            <td data-label="Доход">2,4М ₽</td>
+                            <td data-label="Прибыль" class="hide-mobile">0,9М ₽</td>
+                            <td data-label="ROI">60%</td>
+                        </tr>
+                         <tr>
+                            <td data-label="Канал" style="font-weight: bold; color: var(--c6);">Email</td>
+                            <td data-label="Охват">238.5k</td>
+                            <td data-label="CTR" class="hide-mobile">15% (OR)</td>
+                            <td data-label="CPC" class="hide-mobile">~20 ₽</td>
+                            <td data-label="CR">1.1%</td>
+                            <td data-label="Доход">36,4М ₽</td>
+                            <td data-label="Прибыль" class="hide-mobile">35,7М ₽</td>
+                            <td data-label="ROI">5100%</td>
+                        </tr>
+                        <tr>
+                            <td data-label="Канал" style="font-weight: bold; color: var(--c5);">SMS</td>
+                            <td data-label="Охват">100k</td>
+                            <td data-label="CTR" class="hide-mobile">5% (CR)</td>
+                            <td data-label="CPC" class="hide-mobile">N/A</td>
+                            <td data-label="CR">1.1%</td>
+                            <td data-label="Доход">15,4М ₽</td>
+                            <td data-label="Прибыль" class="hide-mobile">14,2М ₽</td>
+                            <td data-label="ROI">1183%</td>
+                        </tr>
+                        <tr>
+                            <td data-label="Канал" style="font-weight: bold; color: var(--c7);">Push</td>
+                            <td data-label="Охват">150k</td>
+                            <td data-label="CTR" class="hide-mobile">8% (OR)</td>
+                            <td data-label="CPC" class="hide-mobile">~42 ₽</td>
+                            <td data-label="CR">0.4%</td>
+                            <td data-label="Доход">8,4М ₽</td>
+                            <td data-label="Прибыль" class="hide-mobile">7,9М ₽</td>
+                            <td data-label="ROI">1580%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
             <section class="section section-break">
                 <h2 class="section-title reveal">План Реализации <span>(Диаграмма Ганта)</span></h2>
-                <table class="gantt-table reveal">
+                <table class="responsive-table gantt-table reveal">
                     <thead>
                         <tr><th>Задача</th><th>Октябрь</th><th>Ноябрь</th><th>Декабрь</th></tr>
                     </thead>
@@ -297,7 +388,7 @@
 
             <section class="section section-break">
                 <h2 class="section-title reveal">Прогнозные <span>KPI</span></h2>
-                <table class="kpi-table reveal">
+                <table class="responsive-table kpi-table reveal">
                      <thead>
                         <tr><th>Показатель</th><th>Пессимистичный</th><th>Реалистичный (Цель)</th><th>Оптимистичный</th></tr>
                     </thead>
