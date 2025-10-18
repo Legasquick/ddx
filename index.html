@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интерактивный план кампании DDX Fitness: Успей к Новому Году!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #101010;
+            --bg-light: #F7F7F7;
+            --card-light: #FFFFFF;
+            --text-dark: #1F2533;
+            --text-light: #FFFFFF;
+            --text-grey: #888888;
+            
+            /* Фирменные цвета DDX */
+            --ddx-orange: #F06F38;
+            --ddx-teal: #26B1AD;
+            --ddx-purple: #5A308E;
+            --border-color: #EAEAEA;
+
+            /* Цвета для чарта */
+            --c1: #F06F38; /* Performance */
+            --c2: #5A308E; /* Trainers */
+            --c3: #26B1AD; /* Outdoor */
+            --c4: #ffae8c; /* SMM */
+            --c5: #8c6eb8; /* SMS */
+            --c6: #6cd4d1; /* Email */
+            --c7: #f5c7b4; /* Push */
+            --c8: #cccccc; /* Reserve */
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+            margin: 0; padding: 0;
+            line-height: 1.6;
+        }
+
+        .top-banner {
+            background-color: var(--ddx-purple);
+            color: var(--text-light);
+            text-align: center;
+            padding: 10px;
+            font-size: 0.9em;
+            font-weight: 700;
+        }
+
+        .page-wrapper { background-color: var(--bg-light); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header { text-align: center; padding: 50px 0; }
+        header h1 { font-size: 3.5em; font-weight: 900; text-transform: uppercase; margin: 0; line-height: 1.2; color: var(--text-dark); }
+        header .subtitle { font-size: 1.2em; color: var(--text-grey); margin-top: 10px; max-width: 800px; margin-left: auto; margin-right: auto; }
+
+        .section { padding: 60px 0; }
+        .section-break { border-bottom: 1px solid var(--border-color); }
+        .section-title { font-size: 2.8em; font-weight: 900; text-align: center; margin-bottom: 20px; text-transform: uppercase; color: var(--text-dark); }
+        .section-title span { color: var(--ddx-orange); }
+        .subsection-title { font-size: 1.8em; font-weight: 700; text-align: center; margin-top: 70px; margin-bottom: 40px; color: var(--text-dark); }
+        .section-description { text-align: center; max-width: 800px; margin: 0 auto 50px; color: var(--text-grey); font-size: 1.1em; }
+
+        .kpi-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; }
+        
+        /* ОБЩИЙ СТИЛЬ ДЛЯ ВСЕХ КАРТОЧЕК */
+        .card, .channel-card {
+            background-color: var(--card-light);
+            border-radius: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.07);
+        }
+        .card:hover, .channel-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .card { padding: 30px; }
+        .channel-card { padding: 25px; }
+
+        .card-title { font-size: 1em; font-weight: 700; color: var(--text-grey); margin-bottom: 15px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .card-value { font-size: 3em; font-weight: 900; color: var(--ddx-orange); text-align: center; }
+        
+        .grid-3-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        
+        .channel-card h3 { margin-top: 0; font-size: 1.4em; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .channel-card .budget { font-size: 1.8em; font-weight: 900; color: var(--ddx-orange); margin-bottom: 15px; }
+        .channel-card p { color: var(--text-grey); font-size: 0.95em; margin-bottom: 0; }
+        
+        /* Budget Chart Section */
+        .budget-section-layout { display: flex; align-items: center; gap: 50px; flex-wrap: wrap; }
+        .chart-container {
+            flex: 1;
+            position: relative;
+            max-width: 300px;
+            min-width: 300px;
+            aspect-ratio: 1 / 1;
+        }
+        .donut-chart-svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+            overflow: visible;
+        }
+        .donut-chart-svg circle { transition: transform 0.3s ease; transform-origin: center; cursor: pointer; }
+        .donut-chart-svg circle.highlighted { transform: scale(1.05); }
+        
+        .donut-chart-hole { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 65%; height: 65%; background: var(--bg-light); border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .donut-chart-hole .total-title { font-size: 1em; color: var(--text-grey); font-weight: 700; text-transform: uppercase; }
+        .donut-chart-hole .total-value { font-size: 2.2em; font-weight: 900; color: var(--text-dark); line-height: 1.2; }
+        .legend-container { flex: 1.2; min-width: 320px; }
+        .legend-list { list-style: none; padding: 0; margin: 0; }
+        .legend-item { display: flex; align-items: center; margin-bottom: 15px; padding: 10px; border-radius: 10px; transition: background-color 0.3s, transform 0.3s; cursor: pointer; }
+        .legend-item.highlighted { background-color: var(--card-light); transform: scale(1.03); }
+        .legend-color { width: 20px; height: 20px; border-radius: 5px; margin-right: 15px; }
+        .legend-info { flex-grow: 1; }
+        .legend-info .channel { font-weight: 700; font-size: 1.1em; color: var(--text-dark); }
+        .legend-info .details { font-size: 0.9em; color: var(--text-grey); }
+        .legend-value { font-weight: 900; font-size: 1.2em; color: var(--text-dark); text-align: right; }
+
+        table { width: 100%; border-collapse: collapse; background-color: var(--card-light); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.07); }
+        th, td { padding: 18px 20px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        tbody tr { transition: background-color 0.3s ease; }
+        tbody tr:hover { background-color: #fdf5f1; }
+        tr:last-child td { border-bottom: none; }
+        th { background-color: #f7f7f7; text-transform: uppercase; font-size: 0.9em; font-weight: 700; color: var(--text-grey); }
+        .gantt-table .marker { background-color: var(--ddx-teal); color: var(--text-light); font-weight: bold; text-align: center; border-radius: 8px; font-size: 0.9em; padding: 8px 12px; }
+        .gantt-table .marker.orange { background-color: var(--ddx-orange); }
+        .gantt-table .marker.purple { background-color: var(--ddx-purple); }
+        .kpi-table .highlight { background-color: rgba(240, 111, 56, 0.05); }
+        .kpi-table .highlight td { font-weight: 700; color: var(--ddx-orange); }
+
+        .tooltip { position: relative; display: inline-flex; cursor: help; }
+        .tooltip-icon { font-style: normal; font-weight: 700; background-color: #d0d0d0; color: var(--card-light); border-radius: 50%; width: 18px; height: 18px; font-size: 12px; line-height: 18px; text-align: center; }
+        .tooltip-text { visibility: hidden; width: 250px; background-color: var(--text-dark); color: var(--text-light); text-align: center; border-radius: 6px; padding: 10px; position: absolute; z-index: 10; bottom: 150%; left: 50%; margin-left: -125px; opacity: 0; transition: opacity 0.3s; font-size: 0.85em; line-height: 1.4; font-weight: 400; text-transform: none; }
+        .tooltip-text::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: var(--text-dark) transparent transparent transparent; }
+        .tooltip:hover .tooltip-text { visibility: visible; opacity: 1; }
+        
+        .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        
+        /* Game Styles */
+        .game-area { text-align: center; background: var(--card-light); border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.07); }
+        .game-stats { display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; }
+        .stat-box { background: var(--bg-light); padding: 15px 30px; border-radius: 12px; }
+        .stat-label { font-size: 0.9em; font-weight: 700; color: var(--text-grey); }
+        .stat-value { font-size: 2.5em; font-weight: 900; color: var(--text-dark); }
+        .muscle-container { margin: 20px 0; }
+        #muscle {
+            font-size: 120px;
+            line-height: 1;
+            cursor: default;
+            transition: transform 0.1s ease;
+            user-select: none;
+            display: inline-block;
+        }
+        #muscle.clicked { transform: scale(1.2) rotate(-10deg); }
+        .game-button { background-color: var(--ddx-orange); color: var(--text-light); border: none; padding: 15px 40px; font-size: 1.1em; font-weight: 700; border-radius: 10px; cursor: pointer; text-transform: uppercase; transition: background-color 0.3s, transform 0.3s; }
+        .game-button:hover { background-color: #d65c29; transform: translateY(-3px); }
+        .game-button:disabled { background-color: var(--text-grey); cursor: not-allowed; }
+        .game-result { font-size: 1.5em; font-weight: 700; margin-top: 20px; min-height: 30px; }
+        
+        footer { text-align: center; padding: 40px; color: #ccc; font-size: 0.9em; }
+
+        @media (max-width: 768px) {
+            .budget-section-layout { flex-direction: column; }
+            .legend-container { width: 100%; margin-top: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-banner">Внутренний документ: Маркетинговая стратегия Q4 2025</div>
+
+    <div class="page-wrapper">
+        <div class="container">
+
+            <header class="reveal">
+                <h1>УСПЕЙ К НОВОМУ ГОДУ!</h1>
+                <p class="subtitle">Интерактивный план кампании для DDX Fitness на Q4 2025. Наведите на элементы со значком (i) для получения дополнительной информации.</p>
+            </header>
+
+            <section class="section section-break">
+                <h2 class="section-title reveal">Ключевые <span>Цели</span></h2>
+                <div class="kpi-cards">
+                    <div class="card reveal" style="transition-delay: 100ms;"><div class="card-title">Продажи <div class="tooltip"><span class="tooltip-icon">i</span><span class="tooltip-text">Сумма продаж новым клиентам и клиентам, вернувшимся из базы оттока (238,500 чел). Целевая конверсия реактивации - 2%.</span></div></div><div class="card-value">9,770+</div></div>
+                    <div class="card reveal" style="transition-delay: 200ms;"><div class="card-title">Бюджет <div class="tooltip"><span class="tooltip-icon">i</span><span class="tooltip-text">Общие маркетинговые расходы на все каналы в течение 3 месяцев.</span></div></div><div class="card-value">20М ₽</div></div>
+                    <div class="card reveal" style="transition-delay: 300ms;"><div class="card-title">ROI <div class="tooltip"><span class="tooltip-icon">i</span><span class="tooltip-text">Окупаемость инвестиций. Показывает, сколько прибыли мы получим на каждый вложенный рубль. Рассчитан на основе реалистичного прогноза.</span></div></div><div class="card-value">584%</div></div>
+                    <div class="card reveal" style="transition-delay: 400ms;"><div class="card-title">Выручка <div class="tooltip"><span class="tooltip-icon">i</span><span class="tooltip-text">Прогнозный доход от продаж абонементов до вычета расходов при среднем чеке в 14,000 ₽ с учетом скидки.</span></div></div><div class="card-value">136.7М ₽</div></div>
+                </div>
+            </section>
+            
+            <section class="section section-break">
+                <h2 class="section-title reveal">Бюджет: <span>Каналы и Соотношение</span></h2>
+                <p class="section-description reveal">Сначала детальный разбор каждого канала и его роли, а затем — наглядная диаграмма общего соотношения инвестиций.</p>
+                
+                <div class="grid-3-cols reveal">
+                    <div class="channel-card"><h3 style="color: var(--c1);">Performance-каналы</h3><div class="budget">10,400,000 ₽</div><p><b>Роль:</b> Основной источник новых клиентов (Яндекс.Директ, Таргет VK/TG). Легко отслеживать CPA и оптимизировать расходы.</p></div>
+                    <div class="channel-card"><h3 style="color: var(--c2);">Бонусы тренерам</h3><div class="budget">3,000,000 ₽</div><p><b>Роль:</b> Создание нативного контента. Мотивация через KPI по продажам с личных промокодов.</p></div>
+                    <div class="channel-card"><h3 style="color: var(--c4);">SMM</h3><div class="budget">1,500,000 ₽</div><p><b>Роль:</b> Вовлечение, создание комьюнити. Включает бюджет на контент, конкурсы и продвижение постов.</p></div>
+                    <div class="channel-card"><h3 style="color: var(--c6);">Email-маркетинг</h3><div class="budget">700,000 ₽</div><p><b>Роль:</b> Самый рентабельный канал реактивации. Сегментированные цепочки писем для "свежего" и "старого" оттока.</p></div>
+                    <div class="channel-card"><h3 style="color: var(--c7);">Push-уведомления</h3><div class="budget">500,000 ₽</div><p><b>Роль:</b> Мгновенные и бесплатные касания с активной аудиторией приложения. Анонсы геймификации и срочные напоминания.</p></div>
+                    <div class="channel-card"><h3 style="color: var(--c5);">SMS-рассылки</h3><div class="budget">1,200,000 ₽</div><p><b>Роль:</b> "Тяжелая артиллерия". Используется точечно для самых важных офферов на сегмент, который не открыл email/push.</p></div>
+                </div>
+                 <div class="grid-3-cols reveal" style="margin-top: 25px;">
+                     <div class="card" style="grid-column: 1 / -1;"><div class="card-title" style="justify-content: space-between;"><div><h3 style="margin:0; font-size: 1.4em; color: var(--c3);">Наружная реклама: Декабрьский рывок</h3><p style="margin: 0; color: var(--text-grey); font-weight: 400;">Тактический охват рядом с 53 клубами для создания срочности.</p></div><div class="card-value" style="font-size: 2.2em; text-align: right;">2,400,000 ₽</div></div></div>
+                 </div>
+
+                <h3 class="subsection-title reveal">Общее соотношение каналов</h3>
+                <div class="budget-section-layout reveal">
+                    <div class="chart-container">
+                        <svg class="donut-chart-svg" viewBox="0 0 36 36">
+                            <circle data-legend="legend-8" cx="18" cy="18" r="15.915" fill="none" stroke="var(--c8)" stroke-width="4"></circle>
+                            <circle data-legend="legend-7" cx="18" cy="18" r="15.915" fill="none" stroke="var(--c7)" stroke-width="4" stroke-dasharray="2.5, 97.5" stroke-dashoffset="0"></circle>
+                            <circle data-legend="legend-6" cx="18" cy="18" r="15.915" fill="none" stroke="var(--c6)" stroke-width="4" stroke-dasharray="3.5, 96.5" stroke-dashoffset="-2.5"></circle>
+                            <circle data-legend="legend-5" cx="18" cy="18" r="15.915" fill="none" stroke="var(--c5)" stroke-width="4" stroke-dasharray="6, 94" stroke-dashoffset="-6"></circle>
+                            <circle data-legend="legend-4" cx="18" cy="18" r="15.915" fill="none" stroke="var(--c4)" stroke-width="4" stroke-dasharray="7.5, 92.5" stroke-dashoffset="-12"></circle>
+                            <circle data-legend="legend-3" cx="18" cy="18" r="15.915" fill="none" stroke="var(--c3)" stroke-width="4" stroke-dasharray="12, 88" stroke-dashoffset="-19.5"></circle>
+                            <circle data-legend="legend-2" cx="18" cy="18" r="15.915" fill="none" stroke="var(--c2)" stroke-width="4" stroke-dasharray="15, 85" stroke-dashoffset="-31.5"></circle>
+                            <circle data-legend="legend-1" cx="18" cy="18" r="15.915" fill="none" stroke="var(--c1)" stroke-width="4" stroke-dasharray="52, 48" stroke-dashoffset="-46.5"></circle>
+                        </svg>
+                        <div class="donut-chart-hole">
+                            <div class="total-title">Общий бюджет</div>
+                            <div class="total-value">20М ₽</div>
+                        </div>
+                    </div>
+                    <div class="legend-container">
+                        <ul class="legend-list">
+                            <li id="legend-1" class="legend-item"><div class="legend-color" style="background-color: var(--c1);"></div><div class="legend-info"><div class="channel">Performance</div><div class="details">Яндекс.Директ, Таргет VK/TG</div></div><div class="legend-value">52%</div></li>
+                            <li id="legend-2" class="legend-item"><div class="legend-color" style="background-color: var(--c2);"></div><div class="legend-info"><div class="channel">Бонусы тренерам</div><div class="details">Создание нативного контента</div></div><div class="legend-value">15%</div></li>
+                            <li id="legend-3" class="legend-item"><div class="legend-color" style="background-color: var(--c3);"></div><div class="legend-info"><div class="channel">Наружная реклама</div><div class="details">53 ситилайта в декабре</div></div><div class="legend-value">12%</div></li>
+                            <li id="legend-4" class="legend-item"><div class="legend-color" style="background-color: var(--c4);"></div><div class="legend-info"><div class="channel">SMM</div><div class="details">Контент и продвижение</div></div><div class="legend-value">7.5%</div></li>
+                            <li id="legend-5" class="legend-item"><div class="legend-color" style="background-color: var(--c5);"></div><div class="legend-info"><div class="channel">SMS</div><div class="details">"Тяжелая артиллерия"</div></div><div class="legend-value">6%</div></li>
+                            <li id="legend-6" class="legend-item"><div class="legend-color" style="background-color: var(--c6);"></div><div class="legend-info"><div class="channel">Email</div><div class="details">Реактивация базы</div></div><div class="legend-value">3.5%</div></li>
+                            <li id="legend-7" class="legend-item"><div class="legend-color" style="background-color: var(--c7);"></div><div class="legend-info"><div class="channel">Push</div><div class="details">Мгновенные касания</div></div><div class="legend-value">2.5%</div></li>
+                            <li id="legend-8" class="legend-item"><div class="legend-color" style="background-color: var(--c8);"></div><div class="legend-info"><div class="channel">Резерв</div><div class="details">Аналитика, тесты</div></div><div class="legend-value">1.5%</div></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section section-break">
+                <h2 class="section-title reveal">План Реализации <span>(Диаграмма Ганта)</span></h2>
+                <table class="gantt-table reveal">
+                    <thead><tr><th style="width: 25%;">Задача</th><th>Октябрь (Разогрев)</th><th>Ноябрь (Активная Продажа)</th><th>Декабрь (Создание Срочности)</th></tr></thead>
+                    <tbody>
+                        <tr><td>Подготовка и аналитика</td><td class="marker purple">ЗАПУСК</td><td></td><td></td></tr>
+                        <tr><td>Контент (Блогеры, SMM)</td><td class="marker">✓</td><td class="marker">✓</td><td class="marker">✓</td></tr>
+                        <tr><td>Яндекс.Директ / Таргет</td><td class="marker">Сбор аудитории</td><td class="marker orange">ГЛАВНЫЙ ОФФЕР</td><td class="marker">Ретаргетинг</td></tr>
+                        <tr><td>Email / Push / SMS</td><td class="marker">"Мягкое" касание</td><td class="marker orange">Продающая серия</td><td class="marker purple">"Последний шанс"</td></tr>
+                        <tr><td>Геймификация</td><td></td><td class="marker">Старт "Фитнес-календаря"</td><td class="marker">✓</td></tr>
+                        <tr><td>Наружная реклама</td><td></td><td></td><td class="marker orange">ИМИДЖ</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="section section-break">
+                <h2 class="section-title reveal">Прогнозные <span>KPI</span></h2>
+                <table class="kpi-table reveal">
+                    <thead><tr><th>Показатель</th><th>Пессимистичный <div class="tooltip"><span class="tooltip-icon">i</span><span class="tooltip-text">Сценарий, если конверсия и средний чек окажутся ниже рыночных ожиданий. Служит как точка минимальной эффективности.</span></div></th><th>Реалистичный (Цель) <div class="tooltip"><span class="tooltip-icon">i</span><span class="tooltip-text">Наш основной ориентир. Основан на среднерыночных показателях конверсии и скорректированном среднем чеке с учетом акции.</span></div></th><th>Оптимистичный <div class="tooltip"><span class="tooltip-icon">i</span><span class="tooltip-text">Сценарий, если кампания "выстрелит" лучше ожиданий благодаря сильным креативам и высокому спросу. Лучший из возможных исходов.</span></div></th></tr></thead>
+                    <tbody>
+                        <tr><td>Средний чек</td><td>12 000 ₽</td><td>14 000 ₽</td><td>16 000 ₽</td></tr>
+                        <tr><td>Всего продаж</td><td>8 000</td><td>9 770</td><td>12 500</td></tr>
+                        <tr><td>Выручка</td><td>96,000,000 ₽</td><td>136,780,000 ₽</td><td>200,000,000 ₽</td></tr>
+                        <tr><td>ROI</td><td>380%</td><td>584%</td><td>900%</td></tr>
+                        <tr class="highlight"><td><strong>Итоговый KPI</strong></td><td colspan="3" style="text-align: center;"><strong>ROI 584% при продаже 9,770 абонементов</strong></td></tr>
+                    </tbody>
+                </table>
+            </section>
+            
+            <section class="section section-break">
+                <h2 class="section-title reveal">Дополнительные <span>Расчетные KPI</span></h2>
+                <div class="kpi-cards">
+                    <div class="card reveal"><div class="card-title">CPC (Cost Per Click)<div class="tooltip"><span class="tooltip-icon">i</span><span class="tooltip-text">Общие расходы / Общее кол-во кликов. Расчет: 20,000,000 ₽ / 250,000 прогнозных кликов = 80 ₽.</span></div></div><div class="card-value">~ 80 ₽</div></div>
+                    <div class="card reveal"><div class="card-title">Стоимость контакта (CPA)<div class="tooltip"><span class="tooltip-icon">i</span><span class="tooltip-text">Общие расходы / Кол-во контактов (лидов). Расчет: 20,000,000 ₽ / 9,770 плановых продаж = 2,047 ₽.</span></div></div><div class="card-value">~ 2,047 ₽</div></div>
+                </div>
+            </section>
+            
+            <section class="section">
+                <h2 class="section-title reveal">Напоследок: <span>DDX ФЛЕКС-КЛИКЕР</span></h2>
+                <p class="section-description reveal">Проверь свою мощь! Сколько раз ты сможешь "сократить" бицепс за 10 секунд?</p>
+                <div class="game-area reveal">
+                    <div class="game-stats">
+                        <div class="stat-box"><div class="stat-label">СЧЕТ</div><div id="game-score" class="stat-value">0</div></div>
+                        <div class="stat-box"><div class="stat-label">ВРЕМЯ</div><div id="game-timer" class="stat-value">10</div></div>
+                    </div>
+                    <div class="muscle-container">
+                        <div id="muscle">💪</div>
+                    </div>
+                    <button id="start-game-btn" class="game-button">ПОКАЗАТЬ СИЛУ</button>
+                    <div id="game-result" class="game-result"></div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+    
+    <footer style="background-color: var(--bg-dark);">
+        <p>DDX Fitness Marketing Department | Campaign Plan Q4 2025</p>
+    </footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Анимация при скролле
+        const revealElements = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        revealElements.forEach(el => { observer.observe(el); });
+
+        // Интерактивность чарта
+        const legendItems = document.querySelectorAll('.legend-item');
+        const chartSlices = document.querySelectorAll('.donut-chart-svg circle');
+
+        const handleMouseOver = (element) => {
+            const legendId = element.dataset.legend || element.id;
+            const correspondingSlice = document.querySelector(`circle[data-legend="${legendId}"]`);
+            const correspondingLegend = document.getElementById(legendId);
+            
+            if (correspondingSlice) correspondingSlice.classList.add('highlighted');
+            if (correspondingLegend) correspondingLegend.classList.add('highlighted');
+        };
+
+        const handleMouseOut = (element) => {
+            const legendId = element.dataset.legend || element.id;
+            const correspondingSlice = document.querySelector(`circle[data-legend="${legendId}"]`);
+            const correspondingLegend = document.getElementById(legendId);
+
+            if (correspondingSlice) correspondingSlice.classList.remove('highlighted');
+            if (correspondingLegend) correspondingLegend.classList.remove('highlighted');
+        };
+
+        legendItems.forEach(item => {
+            item.addEventListener('mouseover', () => handleMouseOver(item));
+            item.addEventListener('mouseout', () => handleMouseOut(item));
+        });
+
+        chartSlices.forEach(slice => {
+            slice.addEventListener('mouseover', () => handleMouseOver(slice));
+            slice.addEventListener('mouseout', () => handleMouseOut(slice));
+        });
+
+        // Логика игры
+        const scoreDisplay = document.getElementById('game-score');
+        const timerDisplay = document.getElementById('game-timer');
+        const muscle = document.getElementById('muscle');
+        const startBtn = document.getElementById('start-game-btn');
+        const resultDisplay = document.getElementById('game-result');
+        
+        let score = 0;
+        let timeLeft = 10;
+        let timer;
+        let gameActive = false;
+
+        const muscleClickHandler = () => {
+            if (!gameActive) return;
+            score++;
+            scoreDisplay.textContent = score;
+            muscle.classList.add('clicked');
+            setTimeout(() => muscle.classList.remove('clicked'), 100);
+        };
+
+        muscle.addEventListener('click', muscleClickHandler);
+
+        startBtn.addEventListener('click', () => {
+            if (gameActive) return;
+
+            // Сброс
+            gameActive = true;
+            score = 0;
+            timeLeft = 10;
+            scoreDisplay.textContent = score;
+            timerDisplay.textContent = timeLeft;
+            resultDisplay.textContent = '';
+            startBtn.disabled = true;
+            muscle.style.cursor = 'pointer';
+
+            timer = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = timeLeft;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    gameActive = false;
+                    startBtn.textContent = 'ЕЩЕ ПОДХОД?';
+                    startBtn.disabled = false;
+                    muscle.style.cursor = 'default';
+
+                    let resultMessage = '';
+                    if (score > 70) resultMessage = 'ТЫ МАШИНА!';
+                    else if (score > 50) resultMessage = 'Отличный результат!';
+                    else if (score > 30) resultMessage = 'Неплохо, но можно лучше!';
+                    else resultMessage = 'Нужно больше тренироваться!';
+                    
+                    resultDisplay.textContent = `Твой результат: ${score} флексов! ${resultMessage}`;
+                }
+            }, 1000);
+        });
+    });
+</script>
+
+</body>
+</html>
