@@ -67,7 +67,6 @@
 
         .kpi-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; }
         
-        /* ОБЩИЙ СТИЛЬ ДЛЯ ВСЕХ КАРТОЧЕК */
         .card, .channel-card {
             background-color: var(--card-light);
             border-radius: 20px;
@@ -91,7 +90,6 @@
         .channel-card .budget { font-size: 1.8em; font-weight: 900; color: var(--ddx-orange); margin-bottom: 15px; }
         .channel-card p { color: var(--text-grey); font-size: 0.95em; margin-bottom: 0; }
         
-        /* Budget Chart Section */
         .budget-section-layout { display: flex; align-items: center; gap: 50px; flex-wrap: wrap; }
         .chart-container {
             flex: 1;
@@ -99,13 +97,9 @@
             max-width: 300px;
             min-width: 300px;
             aspect-ratio: 1 / 1;
+            margin: 0 auto;
         }
-        .donut-chart-svg {
-            width: 100%;
-            height: 100%;
-            transform: rotate(-90deg);
-            overflow: visible;
-        }
+        .donut-chart-svg { width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
         .donut-chart-svg circle { transition: transform 0.3s ease; transform-origin: center; cursor: pointer; }
         .donut-chart-svg circle.highlighted { transform: scale(1.05); }
         
@@ -150,14 +144,7 @@
         .stat-label { font-size: 0.9em; font-weight: 700; color: var(--text-grey); }
         .stat-value { font-size: 2.5em; font-weight: 900; color: var(--text-dark); }
         .muscle-container { margin: 20px 0; }
-        #muscle {
-            font-size: 120px;
-            line-height: 1;
-            cursor: default;
-            transition: transform 0.1s ease;
-            user-select: none;
-            display: inline-block;
-        }
+        #muscle { font-size: 120px; line-height: 1; cursor: default; transition: transform 0.1s ease; user-select: none; display: inline-block; }
         #muscle.clicked { transform: scale(1.2) rotate(-10deg); }
         .game-button { background-color: var(--ddx-orange); color: var(--text-light); border: none; padding: 15px 40px; font-size: 1.1em; font-weight: 700; border-radius: 10px; cursor: pointer; text-transform: uppercase; transition: background-color 0.3s, transform 0.3s; }
         .game-button:hover { background-color: #d65c29; transform: translateY(-3px); }
@@ -166,9 +153,57 @@
         
         footer { text-align: center; padding: 40px; color: #ccc; font-size: 0.9em; }
 
+        /* === MOBILE RESPONSIVE STYLES === */
         @media (max-width: 768px) {
-            .budget-section-layout { flex-direction: column; }
-            .legend-container { width: 100%; margin-top: 40px; }
+            .container { padding: 15px; }
+            header { padding: 30px 0; }
+            header h1 { font-size: 2.2em; }
+            header .subtitle { font-size: 1em; }
+
+            .section { padding: 40px 0; }
+            .section-title { font-size: 1.8em; }
+            .section-description { font-size: 1em; }
+            .subsection-title { font-size: 1.5em; }
+
+            .card-value { font-size: 2.2em; }
+            .channel-card .budget { font-size: 1.5em; }
+
+            .budget-section-layout { flex-direction: column; gap: 40px; }
+            .legend-container { width: 100%; }
+            
+            /* Responsive Tables */
+            table { border-radius: 0; box-shadow: none; background-color: transparent; }
+            table thead { display: none; }
+            table tr { 
+                display: block; 
+                margin-bottom: 20px; 
+                background: var(--card-light); 
+                border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.07);
+            }
+            table td { 
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 15px;
+                border-bottom: 1px solid var(--border-color);
+                text-align: right;
+            }
+            table td:last-child { border-bottom: 0; }
+            table td::before {
+                content: attr(data-label);
+                font-weight: bold;
+                text-align: left;
+                margin-right: 20px;
+                color: var(--text-dark);
+            }
+            .kpi-table .highlight {
+                 border: 2px solid var(--ddx-orange);
+            }
+            
+            .game-stats { flex-direction: column; gap: 15px; }
+            #muscle { font-size: 100px; }
+            .game-result { font-size: 1.2em; }
         }
     </style>
 </head>
@@ -246,14 +281,16 @@
             <section class="section section-break">
                 <h2 class="section-title reveal">План Реализации <span>(Диаграмма Ганта)</span></h2>
                 <table class="gantt-table reveal">
-                    <thead><tr><th style="width: 25%;">Задача</th><th>Октябрь (Разогрев)</th><th>Ноябрь (Активная Продажа)</th><th>Декабрь (Создание Срочности)</th></tr></thead>
+                    <thead>
+                        <tr><th>Задача</th><th>Октябрь</th><th>Ноябрь</th><th>Декабрь</th></tr>
+                    </thead>
                     <tbody>
-                        <tr><td>Подготовка и аналитика</td><td class="marker purple">ЗАПУСК</td><td></td><td></td></tr>
-                        <tr><td>Контент (Блогеры, SMM)</td><td class="marker">✓</td><td class="marker">✓</td><td class="marker">✓</td></tr>
-                        <tr><td>Яндекс.Директ / Таргет</td><td class="marker">Сбор аудитории</td><td class="marker orange">ГЛАВНЫЙ ОФФЕР</td><td class="marker">Ретаргетинг</td></tr>
-                        <tr><td>Email / Push / SMS</td><td class="marker">"Мягкое" касание</td><td class="marker orange">Продающая серия</td><td class="marker purple">"Последний шанс"</td></tr>
-                        <tr><td>Геймификация</td><td></td><td class="marker">Старт "Фитнес-календаря"</td><td class="marker">✓</td></tr>
-                        <tr><td>Наружная реклама</td><td></td><td></td><td class="marker orange">ИМИДЖ</td></tr>
+                        <tr><td data-label="Задача">Подготовка и аналитика</td><td data-label="Октябрь"><span class="marker purple">ЗАПУСК</span></td><td data-label="Ноябрь"></td><td data-label="Декабрь"></td></tr>
+                        <tr><td data-label="Задача">Контент (Блогеры, SMM)</td><td data-label="Октябрь"><span class="marker">✓</span></td><td data-label="Ноябрь"><span class="marker">✓</span></td><td data-label="Декабрь"><span class="marker">✓</span></td></tr>
+                        <tr><td data-label="Задача">Яндекс.Директ / Таргет</td><td data-label="Октябрь"><span class="marker">Сбор аудитории</span></td><td data-label="Ноябрь"><span class="marker orange">ГЛАВНЫЙ ОФФЕР</span></td><td data-label="Декабрь"><span class="marker">Ретаргетинг</span></td></tr>
+                        <tr><td data-label="Задача">Email / Push / SMS</td><td data-label="Октябрь"><span class="marker">"Мягкое" касание</span></td><td data-label="Ноябрь"><span class="marker orange">Продающая серия</span></td><td data-label="Декабрь"><span class="marker purple">"Последний шанс"</span></td></tr>
+                        <tr><td data-label="Задача">Геймификация</td><td data-label="Октябрь"></td><td data-label="Ноябрь"><span class="marker">Старт "Фитнес-календаря"</span></td><td data-label="Декабрь"><span class="marker">✓</span></td></tr>
+                        <tr><td data-label="Задача">Наружная реклама</td><td data-label="Октябрь"></td><td data-label="Ноябрь"></td><td data-label="Декабрь"><span class="marker orange">ИМИДЖ</span></td></tr>
                     </tbody>
                 </table>
             </section>
@@ -261,13 +298,15 @@
             <section class="section section-break">
                 <h2 class="section-title reveal">Прогнозные <span>KPI</span></h2>
                 <table class="kpi-table reveal">
-                    <thead><tr><th>Показатель</th><th>Пессимистичный <div class="tooltip"><span class="tooltip-icon">i</span><span class="tooltip-text">Сценарий, если конверсия и средний чек окажутся ниже рыночных ожиданий. Служит как точка минимальной эффективности.</span></div></th><th>Реалистичный (Цель) <div class="tooltip"><span class="tooltip-icon">i</span><span class="tooltip-text">Наш основной ориентир. Основан на среднерыночных показателях конверсии и скорректированном среднем чеке с учетом акции.</span></div></th><th>Оптимистичный <div class="tooltip"><span class="tooltip-icon">i</span><span class="tooltip-text">Сценарий, если кампания "выстрелит" лучше ожиданий благодаря сильным креативам и высокому спросу. Лучший из возможных исходов.</span></div></th></tr></thead>
+                     <thead>
+                        <tr><th>Показатель</th><th>Пессимистичный</th><th>Реалистичный (Цель)</th><th>Оптимистичный</th></tr>
+                    </thead>
                     <tbody>
-                        <tr><td>Средний чек</td><td>12 000 ₽</td><td>14 000 ₽</td><td>16 000 ₽</td></tr>
-                        <tr><td>Всего продаж</td><td>8 000</td><td>9 770</td><td>12 500</td></tr>
-                        <tr><td>Выручка</td><td>96,000,000 ₽</td><td>136,780,000 ₽</td><td>200,000,000 ₽</td></tr>
-                        <tr><td>ROI</td><td>380%</td><td>584%</td><td>900%</td></tr>
-                        <tr class="highlight"><td><strong>Итоговый KPI</strong></td><td colspan="3" style="text-align: center;"><strong>ROI 584% при продаже 9,770 абонементов</strong></td></tr>
+                        <tr><td data-label="Показатель">Средний чек</td><td data-label="Пессимистичный">12 000 ₽</td><td data-label="Реалистичный (Цель)">14 000 ₽</td><td data-label="Оптимистичный">16 000 ₽</td></tr>
+                        <tr><td data-label="Показатель">Всего продаж</td><td data-label="Пессимистичный">8 000</td><td data-label="Реалистичный (Цель)">9 770</td><td data-label="Оптимистичный">12 500</td></tr>
+                        <tr><td data-label="Показатель">Выручка</td><td data-label="Пессимистичный">96,000,000 ₽</td><td data-label="Реалистичный (Цель)">136,780,000 ₽</td><td data-label="Оптимистичный">200,000,000 ₽</td></tr>
+                        <tr><td data-label="Показатель">ROI</td><td data-label="Пессимистичный">380%</td><td data-label="Реалистичный (Цель)">584%</td><td data-label="Оптимистичный">900%</td></tr>
+                        <tr class="highlight"><td data-label="Итоговый KPI"><strong>Итоговый KPI</strong></td><td colspan="3" data-label=""><strong>ROI 584% при продаже 9,770 абонементов</strong></td></tr>
                     </tbody>
                 </table>
             </section>
